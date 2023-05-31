@@ -31,3 +31,10 @@ main{
   gap: .5rem;
   padding: 2rem;
 }
+
+#power-button{
+  width: 5rem;
+  height: 5rem;
+  background-color: black;
+  border-radius: 50%;
+}

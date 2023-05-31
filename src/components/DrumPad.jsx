@@ -1,33 +1,50 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect, useRef } from "react";
+import { AppContext } from "../App";
 
-function DrumPad({ onPlay, audio }) {
+function DrumPad({ audio }) {
+  const { power, setText } = useContext(AppContext);
 
-    const handleClick = (id) => {
-        onPlay(id, audio.name)
+  const play = () => {
+    const audioElement = document.getElementById(`${audio.key}`);
+    audioElement.play();
+    setText(audio.name);
+  };
+
+  const handleClick = () => {
+    if (power) {
+      play();
     }
+  };
 
-    const handleKeyPress = (e) => {
-        if(e.keyCode === audio.keyCode){
-            onPlay(audio.key, audio.name)
-        }
+  const handleKeyPress = (e) => {
+    if (e.keyCode === audio.keyCode) {
+      if (power) play();
     }
+  };
 
-    useEffect(() => {
-        document.addEventListener('keydown', handleKeyPress)
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
 
-        return () => document.removeEventListener('keydown', handleKeyPress)
-    }, [])
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, []);
 
   return (
-    <button 
-        key={audio.key} 
-        className='drum-pad'
-        onClick={() => handleClick(audio.key)}
+    <button
+      key={audio.key}
+      id={audio.name}
+      className="drum-pad"
+      onClick={() => handleClick()}
+      onKeyDown={(e) => handleKeyPress(e)}
     >
-        <audio id={audio.key} className='clip' src={audio.src} type='audio/mpeg' />
-        {audio.key}
+      <audio
+        id={audio.key}
+        className="clip"
+        src={audio.src}
+        type="audio/mpeg"
+      />
+      {audio.key}
     </button>
-  )
+  );
 }
 
-export default DrumPad
+export default DrumPad;
